@@ -32,3 +32,15 @@ mta_archives/
 
 # @cap-js/cds-typer
 @cds-models
+
+# **Additional lines to add**
+# Folders for modules and temporary files
+node_modules/
+gen/
+mtx/sidecar/node_modules/
+
+# Local database files
+*.sqlite
+
+# OS files
+.DS_Store
