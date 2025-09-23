@@ -1,0 +1,63 @@
+{
+  "name": "4IoT-Equipment-Management",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/postgres": "^2",
+    "@sap/cds": "^9",
+    "@sap/cds-mtxs": "^3",
+    "express": "^4",
+    "@cap-js/hana": "^2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.13.0",
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": ">=8",
+    "cds-plugin-ui5": "^0.13.0"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-equipments": "cds watch --open ns.equipments/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-auth": "cds watch --with-auth"
+  },
+  "cds": {
+    "profile": "with-mtx-sidecar",
+    "requires": {
+      "[production]": {
+        "multitenancy": true,
+        "db": "hana"
+      },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "admin": {
+            "password": "password",
+            "roles": [
+              "EquipmentAdmin"
+            ]
+          },
+          "viewer": {
+            "password": "password",
+            "roles": [
+              "authenticated-user"
+            ]
+          }
+        }
+      },
+      "destinations": true,
+      "html5-runtime": true
+    }
+  },
+  "workspaces": [
+    "app/*"
+  ],
+  "sapux": [
+    "app/equipments"
+  ]
+}

@@ -1,0 +1,4 @@
+StatusID,StatusDesc,Equipment_EquipmentID
+S001,Operational,E001
+S002,Under Maintenance,E001
+S003,In Use,E002

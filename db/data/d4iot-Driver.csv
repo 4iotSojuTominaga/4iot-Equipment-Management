@@ -1,0 +1,4 @@
+DriverID,Description,Equipment_EquipmentID
+D001,Main operator,E001
+D002,Secondary operator,E001
+D003,Forklift operator,E003

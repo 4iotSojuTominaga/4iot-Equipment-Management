@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=./values.schema.json
+
+global:
+  domain: abc.com
+  imagePullSecret:
+    name: docker-registry
+  image:
+    registry: registry-server
+    tag: latest
+srv:
+  bindings:
+    service-manager:
+      serviceInstanceName: service-manager
+    destination:
+      serviceInstanceName: destination
+  image:
+    repository: 4IoT-Equipment-Management-srv
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /health
+    readiness:
+      path: /health
+service-manager:
+  serviceOfferingName: service-manager
+  servicePlanName: container
+
+subscription-manager:
+  serviceOfferingName: subscription-manager
+  servicePlanName: provider
+  parameters:
+    appCallbacks:
+      dependenciesCallbacks:
+        url: https://{{ .Release.Name }}-sidecar-{{ .Release.Namespace }}.cert.{{ .Values.global.domain }}/-/cds/sms-provisioning/dependencies/{app_tid}
+      subscriptionCallbacks:
+        url: https://{{ .Release.Name }}-sidecar-{{ .Release.Namespace }}.cert.{{ .Values.global.domain }}/-/cds/sms-provisioning/tenant/{app_tid}
+    appName: 4IoT-Equipment-Management
+    applicationType: application
+    category: "CAP Application"
+    description: A simple CAP project.
+    displayName: 4IoT-Equipment-Management
+    subscribeEnable: true
+    unsubscribeEnable: true
+    iasServiceInstanceName: 4IoT-Equipment-Management-identity
+
+sidecar:
+  bindings:
+    subscription-manager:
+      serviceInstanceName: subscription-manager
+    service-manager:
+      serviceInstanceName: service-manager
+  image:
+    repository: 4IoT-Equipment-Management-sidecar
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /health
+    readiness:
+      path: /health
+  env:
+    SUBSCRIPTION_URL: https://${tenant_subdomain}-{{ .Release.Name }}-srv-{{ .Release.Namespace }}.{{ .Values.global.domain }}
+destination:
+  serviceOfferingName: destination
+  servicePlanName: lite
+  parameters:
+    version: 1.0.0
+    HTML5Runtime_enabled: true
+html5-apps-repo-host:
+  serviceOfferingName: html5-apps-repo
+  servicePlanName: app-host
+html5-apps-deployer:
+  env:
+    SAP_CLOUD_SERVICE: 4IoTEquipmentManagement.service
+  image:
+    repository: 4IoT-Equipment-Management-html5-deployer
+  bindings:
+    destination:
+      serviceInstanceName: destination
+    html5-apps-repo:
+      serviceInstanceName: html5-apps-repo-host
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 1G
+    requests:
+      cpu: 1000m
+      memory: 1G
+  envFrom:
+    - configMapRef:
+        name: "{{ .Release.Name }}-html5-apps-deployer-configmap"
+backendDestinations:
+  srv-api:
+    service: srv

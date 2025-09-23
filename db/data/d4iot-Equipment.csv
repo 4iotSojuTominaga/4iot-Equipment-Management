@@ -1,0 +1,4 @@
+EquipmentID,EquiName,Description,EquipmentType_code,SAPEquipment_code,SAPEquiType_code,SAPObjectType_code,SAPManufacturer_code,SAPWorkCentre_code
+E001,Drill Press,Heavy duty drill press for workshop,ET01,SE01,SET01,SOT01,SM01,SWC01
+E002,CNC Machine,Computer numerical control machine,ET02,SE02,SET02,SOT02,SM02,SWC02
+E003,Forklift,Forklift for warehouse use,ET01,SE01,SET01,SOT01,SM01,SWC01
